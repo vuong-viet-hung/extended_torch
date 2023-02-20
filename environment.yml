@@ -7,6 +7,7 @@ dependencies:
   - conda-forge::jupyterlab
   - conda-forge::ipywidgets
   - conda-forge::scikit-learn
+  - conda-forge::tqdm
   - conda-forge::matplotlib
   - pytorch::pytorch
   - pytorch::torchvision
