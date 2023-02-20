@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import torch.utils.data
 import torchvision
 
@@ -26,9 +28,9 @@ def create_transform(train: bool):
 
 class CIFAR10Images(torch.utils.data.Dataset):
 
-    def __init__(self, root: str, train: bool) -> None:
+    def __init__(self, root: str | Path, train: bool) -> None:
         self._dataset = torchvision.datasets.CIFAR10(
-            root, train, transform=create_transform(train), download=True
+            str(root), train, transform=create_transform(train), download=True
         )
 
     def __len__(self) -> int:
