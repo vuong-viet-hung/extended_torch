@@ -16,10 +16,10 @@ class LRScheduler(Monitor, metaclass=ABCMeta):
 
     def update(self, phase: Phase, model) -> None:
         if phase == self.phase:
-            self.action()
+            self.step()
 
     @abstractmethod
-    def action(self) -> None:
+    def step(self) -> None:
         pass
 
 
@@ -33,5 +33,5 @@ class ReduceLROnPlateau(LRScheduler):
     ) -> None:
         super().__init__(scheduler, criterion, phase)
 
-    def action(self) -> None:
+    def step(self) -> None:
         self.scheduler.step(self.criterion.result())
