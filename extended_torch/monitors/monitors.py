@@ -89,4 +89,3 @@ class ModelCheckpoint(Monitor):
 
         torch.save(model.net.state_dict(), self._model_path)
         torch.save(model.optimizer.state_dict(), self._optimizer_path)
-
