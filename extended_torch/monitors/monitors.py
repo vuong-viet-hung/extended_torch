@@ -70,7 +70,6 @@ class ModelCheckpoint(Monitor):
         self._optimizer_path = Path(optimizer_path)
 
     def update(self, phase: Phase, model) -> None:
-
         if phase != self._phase:
             return
         current_result = self._criterion.result()
