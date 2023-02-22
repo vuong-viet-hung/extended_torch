@@ -1,7 +1,5 @@
-from .monitors import Monitor
-
-from .best_result_trackers import (
-    BestResultTracker, EarlyStopping, ModelCheckpoint
+from .monitors import (
+    Monitor, EarlyStopping, ModelCheckpoint
 )
 
 from .lr_schedulers import (
