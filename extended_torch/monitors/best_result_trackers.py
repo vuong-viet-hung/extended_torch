@@ -22,7 +22,6 @@ class BestResultTracker(Monitor, metaclass=ABCMeta):
             operator.gt if isinstance(criterion, Loss) else operator.lt
         ) if comparator is None else comparator
         self.best_result = None
-        self._epoch_without_improve = 0
 
     @abstractmethod
     def update(self, phase: Phase, model) -> None:
