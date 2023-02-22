@@ -1,5 +1,5 @@
 .idea
-.ipynb_checkpoints
+.ipynb_chekpoints
 __pycache__
 checkpoint
 data/cifar-10-batches-py
