@@ -65,7 +65,6 @@ class Model:
 
         for input_batch, target_batch in progress_bar:
             self.train_one_step(input_batch, target_batch)
-
             progress_bar.set_description(f"Train: {self.format_results()}")
 
         self.notify_monitors("train")
@@ -94,7 +93,6 @@ class Model:
 
         for input_batch, target_batch in progress_bar:
             self.valid_one_step(input_batch, target_batch)
-
             progress_bar.set_description(f"Valid: {self.format_results()}")
 
         self.notify_monitors("valid")
@@ -118,10 +116,7 @@ class Model:
 
         for input_batch, target_batch in progress_bar:
             self.valid_one_step(input_batch, target_batch)
-
-            progress_bar.set_description(
-                f"Test: {self.format_results()}"
-            )
+            progress_bar.set_description(f"Test: {self.format_results()}")
 
     def predict(
             self, input_loader: torch.utils.data.DataLoader
