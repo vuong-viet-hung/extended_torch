@@ -55,8 +55,7 @@ class ModelCheckpoint(Monitor):
     def __init__(
         self,
         criterion: Criterion,
-        model_path: str | Path,
-        optimizer_path: str | Path,
+        checkpoint_dir: str | Path,
         phase: Phase = "valid",
     ) -> None:
         self._criterion = criterion
@@ -65,8 +64,7 @@ class ModelCheckpoint(Monitor):
             operator.gt if isinstance(criterion, Loss) else operator.lt
         )
         self._best_result = None
-        self._model_path = Path(model_path)
-        self._optimizer_path = Path(optimizer_path)
+        self._checkpoint_dir = Path(checkpoint_dir)
 
     def update(self, phase: Phase, model) -> None:
         if phase != self._phase:
@@ -77,14 +75,4 @@ class ModelCheckpoint(Monitor):
                 or self._comparator(self._best_result, current_result)
         ):
             self._best_result = current_result
-            self.save_model(model)
-
-    def save_model(self, model):
-
-        if not self._model_path.parent.exists():
-            self._model_path.parent.mkdir(parents=True, exist_ok=True)
-        if not self._optimizer_path.parent.exists():
-            self._optimizer_path.parent.mkdir(parents=True, exist_ok=True)
-
-        torch.save(model.net.state_dict(), self._model_path)
-        torch.save(model.optimizer.state_dict(), self._optimizer_path)
+            model.save(self._checkpoint_dir)

@@ -1,6 +1,7 @@
 import torch
 import torch.utils.data
 
+from pathlib import Path
 from typing import Literal
 
 from extended_torch.losses import Loss
@@ -129,6 +130,13 @@ class Model:
                     for input_batch in input_loader
                 ]
             )
+
+    def save(self, save_dir: str | Path) -> None:
+        save_dir = Path(save_dir)
+        save_dir.parent.mkdir(parents=True, exist_ok=True)
+
+        torch.save(self.net.state_dict(), save_dir / "net.pth")
+        torch.save(self.optimizer.state_dict(), save_dir / "optimizer.pth")
 
     def update(
         self, output_batch: torch.Tensor, target_batch: torch.Tensor
