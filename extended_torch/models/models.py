@@ -35,7 +35,6 @@ class Model:
         self.running = True
         self.tqdm, self.trange = _import_tqdm()
 
-
     def train(
         self,
         train_loader: torch.utils.data.DataLoader,
@@ -60,6 +59,7 @@ class Model:
         self, train_loader: torch.utils.data.DataLoader
     ) -> None:
         progress_bar = self.tqdm(train_loader)
+        self.net.train()
 
         for input_batch, target_batch in progress_bar:
             self.train_one_step(input_batch, target_batch)
@@ -73,7 +73,6 @@ class Model:
     ) -> None:
         input_batch = input_batch.to(self.device)
         target_batch = target_batch.to(self.device)
-        self.net.train()
 
         output_batch = self.net(input_batch)
         computed_loss = self.loss(output_batch, target_batch)
@@ -88,10 +87,12 @@ class Model:
         self, valid_loader: torch.utils.data.DataLoader
     ) -> None:
         progress_bar = self.tqdm(valid_loader)
+        self.net.eval()
 
-        for input_batch, target_batch in progress_bar:
-            self.valid_one_step(input_batch, target_batch)
-            progress_bar.set_description(f"Valid: {self.format_results()}")
+        with torch.no_grad():
+            for input_batch, target_batch in progress_bar:
+                self.valid_one_step(input_batch, target_batch)
+                progress_bar.set_description(f"Valid: {self.format_results()}")
 
         self.notify_monitors("valid")
         self.reset()
@@ -101,20 +102,19 @@ class Model:
     ) -> None:
         input_batch = input_batch.to(self.device)
         target_batch = target_batch.to(self.device)
-        self.net.eval()
-
-        with torch.no_grad():
-            output_batch = self.net(input_batch)
-
+        output_batch = self.net(input_batch)
         self.update(output_batch, target_batch)
 
     def test(self, test_loader: torch.utils.data.DataLoader) -> None:
-        self.reset()
         progress_bar = self.tqdm(test_loader)
+        self.net.eval()
 
-        for input_batch, target_batch in progress_bar:
-            self.valid_one_step(input_batch, target_batch)
-            progress_bar.set_description(f"Test: {self.format_results()}")
+        with torch.no_grad():
+            for input_batch, target_batch in progress_bar:
+                self.valid_one_step(input_batch, target_batch)
+                progress_bar.set_description(f"Test: {self.format_results()}")
+
+        self.reset()
 
     def predict(
             self, input_loader: torch.utils.data.DataLoader
@@ -161,6 +161,6 @@ class Model:
             monitor.update(phase, self)
 
 
-def _import_tqdm():
+def _import_tqdm() -> tuple:
     from tqdm.auto import tqdm, trange
-    return tqdm, trange()
+    return tqdm, trange
