@@ -25,11 +25,6 @@ class Model:
             "cuda" if torch.cuda.is_available() else "cpu"
         ),
     ):
-
-        from tqdm.auto import tqdm, trange
-        self.tqdm = tqdm
-        self.trange = trange
-
         net.to(device)
         self.net = net
         self.loss = loss
@@ -38,6 +33,8 @@ class Model:
         self.monitors = [] if monitors is None else monitors
         self.device = device
         self.running = True
+        self.tqdm, self.trange = _import_tqdm()
+
 
     def train(
         self,
@@ -162,3 +159,8 @@ class Model:
     def notify_monitors(self, phase: Phase):
         for monitor in self.monitors:
             monitor.update(phase, self)
+
+
+def _import_tqdm():
+    from tqdm.auto import tqdm, trange
+    return tqdm, trange()
